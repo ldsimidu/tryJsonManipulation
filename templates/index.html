@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Dados</title>
+    <script>
+        let data = [];
+
+        function loadData() {
+            fetch('data.json')
+                .then(response => response.json())
+                .then(json => {
+                    data = json;
+                    renderList();
+                });
+        }
+
+        function renderList() {
+            const dataList = document.getElementById('dataList');
+            dataList.innerHTML = '';
+            data.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Editar';
+                editButton.onclick = () => editEntry(index);
+                li.appendChild(editButton);
+                dataList.appendChild(li);
+            });
+        }
+
+        function addEntry() {
+            const entry = document.getElementById('entry').value;
+            if (entry) {
+                data.push(entry);
+                renderList();
+                document.getElementById('entry').value = '';
+                // Aqui você pode adicionar lógica para salvar em uma API ou outra forma
+            }
+        }
+
+        function editEntry(index) {
+            const newValue = prompt("Edite o dado:", data[index]);
+            if (newValue) {
+                data[index] = newValue;
+                renderList();
+            }
+        }
+
+        window.onload = loadData;
+    </script>
+</head>
+<body>
+    <h1>Gerenciador de Dados</h1>
+    <input type="text" id="entry" placeholder="Adicione um dado" required>
+    <button onclick="addEntry()">Adicionar</button>
+
+    <ul id="dataList"></ul>
+</body>
+</html>
